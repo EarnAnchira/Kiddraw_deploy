@@ -54,7 +54,7 @@ const ImageComponent = () => {
     };
 
     const getDataTitle = async () => {
-        const res = await fetch(`/poseanimatorT/${StoryID}`, {
+        const res = await fetch(`https://kiddraw-api.vercel.app/poseanimatorT/${StoryID}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -71,7 +71,7 @@ const ImageComponent = () => {
     }
 
     const getDataDetail = async () => {
-        const res = await fetch(`/poseanimatorD/${StoryID}/${PageNoAnswer1}`, {
+        const res = await fetch(`https://kiddraw-api.vercel.app/poseanimatorD/${StoryID}/${PageNoAnswer1}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -89,7 +89,7 @@ const ImageComponent = () => {
     }
 
     const getDataCustom = async () => {
-        const res = await fetch(`/poseanimatorCustom/${StoryID}`, {
+        const res = await fetch(`https://kiddraw-api.vercel.app/poseanimatorCustom/${StoryID}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"

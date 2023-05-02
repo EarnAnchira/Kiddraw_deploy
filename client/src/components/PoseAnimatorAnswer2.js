@@ -30,31 +30,31 @@ const ImageComponent = () => {
     const [AudioAnswerEng2, setAudioAnswerEng2] = useState(null);
 
     const fetchAudioAnswerEng1 = async () => {
-        const response = await fetch(`/audioanswereng1/${StoryID}/${PageNoAnswer2}`);
+        const response = await fetch(`https://kiddraw-api.vercel.app/audioanswereng1/${StoryID}/${PageNoAnswer2}`);
         const blob = await response.blob();
         setAudioAnswerEng1(blob);
     };
 
     const fetchAudioAnswerEng2 = async () => {
-        const response = await fetch(`/audioanswereng2/${StoryID}/${PageNoAnswer2}`);
+        const response = await fetch(`https://kiddraw-api.vercel.app/audioanswereng2/${StoryID}/${PageNoAnswer2}`);
         const blob = await response.blob();
         setAudioAnswerEng2(blob);
     };
 
     const fetchAudioEng = async () => {
-        const response = await fetch(`/audioeng/${StoryID}/${PageNoAnswer2}`);
+        const response = await fetch(`https://kiddraw-api.vercel.app/audioeng/${StoryID}/${PageNoAnswer2}`);
         const blob = await response.blob();
         setAudioEng(blob);
     };
 
     const fetchAudioThai = async () => {
-        const response = await fetch(`/audiothai/${StoryID}/${PageNoAnswer2}`);
+        const response = await fetch(`https://kiddraw-api.vercel.app/audiothai/${StoryID}/${PageNoAnswer2}`);
         const blob = await response.blob();
         setAudioThai(blob);
     };
 
     const getDataTitle = async () => {
-        const res = await fetch(`/poseanimatorT/${StoryID}`, {
+        const res = await fetch(`https://kiddraw-api.vercel.app/poseanimatorT/${StoryID}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -71,7 +71,7 @@ const ImageComponent = () => {
     }
 
     const getDataDetail = async () => {
-        const res = await fetch(`/poseanimatorD/${StoryID}/${PageNoAnswer2}`, {
+        const res = await fetch(`https://kiddraw-api.vercel.app/poseanimatorD/${StoryID}/${PageNoAnswer2}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -88,7 +88,7 @@ const ImageComponent = () => {
     }
 
     const getDataCustom = async () => {
-        const res = await fetch(`/poseanimatorCustom/${StoryID}`, {
+        const res = await fetch(`https://kiddraw-api.vercel.app/poseanimatorCustom/${StoryID}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
