@@ -16,7 +16,7 @@ const Home = () => {
     };
 
     const getUserData = async () => {
-        const res = await axios.get("/getdata", {
+        const res = await axios.get("https://kiddraw-api.vercel.app/getdata", {
             params: { q: query },
             headers: {
                 "Content-Type": "application/json"
