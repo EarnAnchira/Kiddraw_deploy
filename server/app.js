@@ -1,3 +1,23 @@
+require('dotenv').config()
+const mysql = require("mysql2");
+const conn = mysql.createConnection(process.env.DATABASE_URL)
+
+app.get("/getdata", (req, res) => {
+    const query = req.query.q;
+    try {
+        conn.query(`SELECT * FROM Story WHERE StoryTitleEng LIKE '%${query}'`, (err, result) => {
+            if (err) {
+                console.log("error")
+            } else {
+                console.log("data get")
+                res.status(201).json({ status: 201, data: result })
+            }
+        })
+    } catch (error) {
+        res.status(422).json({ status: 422, error })
+    }
+});
+
 
 const express = require("express")
 const app = express();
