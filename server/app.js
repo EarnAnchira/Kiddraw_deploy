@@ -1,3 +1,5 @@
+import router from "./routes/router";
+
 const express = require("express")
 const app = express();
 // port server
@@ -11,7 +13,7 @@ app.use(express.json());
 app.use(express.static('public'));
 app.use(cors());
 app.use("/uploads",express.static("./uploads"))
-app.use(router);
+app.use("api/v1",router);
 
 app.listen(process.env.PORT||port,()=>{
     console.log("server start")
