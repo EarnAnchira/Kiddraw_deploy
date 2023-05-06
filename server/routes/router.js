@@ -58,8 +58,8 @@ router.post("/storyform/:AdminName", upload.single("photo"), (req, res) => {
     }
 });
 
-//upload Dressing Head
-router.post("/uploaddressinghead/:AdminName", upload.single("photo"), (req, res) => {
+//upload Dressing
+router.post("/uploaddressing/:AdminName", upload.single("photo"), (req, res) => {
     const { filename } = req.file;
     const { AdminName } = req.params;
     const { DressingType } = req.body;
@@ -68,55 +68,46 @@ router.post("/uploaddressinghead/:AdminName", upload.single("photo"), (req, res)
     }
     try {
         let date = moment(new Date()).format("YYYY-MM-DD hh:mm:ss");
-        conn.query("INSERT INTO Dressing SET ?", { HeadImg: filename, date: date, DressingType: DressingType }, (err, result) => {
-            if (err) {
-                console.log("error")
-            } else {
-                console.log("data added")
-                res.status(201).json({ status: 201, data: req.body })
-            }
-        })
+        if(DressingType=="Head"){
+            conn.query("INSERT INTO Dressing SET ?", { HeadImg: filename, date: date, DressingType: DressingType }, (err, result) => {
+                if (err) {
+                    console.log("error")
+                } else {
+                    console.log("data added")
+                    res.status(201).json({ status: 201, data: req.body })
+                }
+            })
+        }else if(DressingType=="Body"){
+            conn.query("INSERT INTO Dressing SET ?", { BodyImg: filename, date: date, DressingType: DressingType }, (err, result) => {
+                if (err) {
+                    console.log("error")
+                } else {
+                    console.log("data added")
+                    res.status(201).json({ status: 201, data: req.body })
+                }
+            })
+        }
     } catch (error) {
         res.status(422).json({ status: 422, error })
     }
 });
 
-//upload Dressing Body
-router.post("/uploaddressingbody/:AdminName", upload.single("photo"), (req, res) => {
-    const { filename } = req.file;
-    const { AdminName } = req.params;
-    const { DressingType } = req.body;
-    if (!filename || !DressingType) {
-        res.status(422).json({ status: 422, message: "fill all the details" })
-    }
-    try {
-        let date = moment(new Date()).format("YYYY-MM-DD hh:mm:ss");
-        conn.query("INSERT INTO Dressing SET ?", { BodyImg: filename, date: date, DressingType: DressingType }, (err, result) => {
-            if (err) {
-                console.log("error")
-            } else {
-                console.log("data added")
-                res.status(201).json({ status: 201, data: req.body })
-            }
-        })
-    } catch (error) {
-        res.status(422).json({ status: 422, error })
-    }
-});
-
-//Upload Story Detail
+//Upload Story Detail Alternative
 router.use(express.urlencoded({ extended: true }));
 const path = require('path');
 const gtts = require('node-gtts')('en');
 const gttsth = require('node-gtts')('th');
 const { v4: uuidv4 } = require('uuid');
-router.post("/storydetail", upload.single("photo"), function (req, res) {
+router.post("/storydetailalternative", upload.single("photo"), function (req, res) {
     const StoryDetailEng = req.body.StoryDetailEng;
     const PageNo = req.body.PageNo;
+    const PageNoAnswer1 = req.body.PageNoAnswer1;
+    const PageNoAnswer2 = req.body.PageNoAnswer2;
+    const PageNoAnswer1Extra = req.body.PageNoAnswer1Extra;
+    const PageNoAnswer2Extra = req.body.PageNoAnswer2Extra;
     const StoryID = req.body.StoryID;
     // const id = uuidv4();
     const StoryDetailThai = req.body.StoryDetailThai;
-    const PageType = req.body.PageType;
     const QuestionEng = req.body.QuestionEng;
     const QuestionThai = req.body.QuestionThai;
     const AnswerEng1 = req.body.AnswerEng1;
@@ -147,15 +138,47 @@ router.post("/storydetail", upload.single("photo"), function (req, res) {
             const AudioThai = `audio/${PageNo}${StoryID}TH.mp3`;
             const AudioAnswerEng1 = `audio/${AnswerEng1}.mp3`;
             const AudioAnswerEng2 = `audio/${AnswerEng2}.mp3`;
-            const sql = `INSERT INTO StoryDetail (StoryDetailEng,StoryDetailThai,StoryID, PageNo, AudioEng,AudioThai,PageType,SceneImage,date,QuestionEng,QuestionThai,AnswerEng1,AnswerEng2,AnswerThai1,AnswerThai2,AudioAnswerEng1,AudioAnswerEng2) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+            const sql = `INSERT INTO StoryDetail (StoryDetailEng,StoryDetailThai,StoryID, PageNo, AudioEng,AudioThai,PageType,SceneImage,date,QuestionEng,QuestionThai,AnswerEng1,AnswerEng2,AnswerThai1,AnswerThai2,AudioAnswerEng1,AudioAnswerEng2,PageNoAnswer1,PageNoAnswer2,PageNoAnswer1Extra,PageNoAnswer2Extra) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
             let date = moment(new Date()).format("YYYY-MM-DD hh:mm:ss");
-            conn.query(sql, [StoryDetailEng, StoryDetailThai, StoryID, PageNo, AudioEng, AudioThai, PageType, filename, date, QuestionEng, QuestionThai, AnswerEng1, AnswerEng2, AnswerThai1, AnswerThai2, AudioAnswerEng1, AudioAnswerEng2], function (err, result) {
+            conn.query(sql, [StoryDetailEng, StoryDetailThai, StoryID, PageNo, AudioEng, AudioThai, "alternative", filename, date, QuestionEng, QuestionThai, AnswerEng1, AnswerEng2, AnswerThai1, AnswerThai2, AudioAnswerEng1, AudioAnswerEng2,PageNoAnswer1,PageNoAnswer2,PageNoAnswer1Extra,PageNoAnswer2Extra], function (err, result) {
                 if (err) throw err;
                 console.log("1 record inserted");
             });
             res.send('GTTS output saved successfully.');
         });
 });
+
+router.post("/storydetailnormal", upload.single("photo"), function (req, res) {
+    const StoryDetailEng = req.body.StoryDetailEng;
+    const PageNo = req.body.PageNo;
+    const PageNoNext = req.body.PageNoNext;
+    const PageNoAnswer1Extra = req.body.PageNoAnswer1Extra;
+    const PageNoAnswer2Extra = req.body.PageNoAnswer2Extra;
+    const StoryID = req.body.StoryID;
+    // const id = uuidv4();
+    const StoryDetailThai = req.body.StoryDetailThai;
+    const { filename } = req.file;
+    gtts.save(`audio/${PageNo}${StoryID}Eng.mp3`, path.join(StoryDetailEng),
+        function (err, result) {
+            if (err) { throw new Error(err); }
+            console.log(result);
+        });
+    gttsth.save(`audio/${PageNo}${StoryID}TH.mp3`, path.join(StoryDetailThai),
+        function (err, result) {
+            if (err) { throw new Error(err); }
+            console.log(result);
+            const AudioEng = `audio/${PageNo}${StoryID}Eng.mp3`;
+            const AudioThai = `audio/${PageNo}${StoryID}TH.mp3`;
+            const sql = `INSERT INTO StoryDetail (StoryDetailEng,StoryDetailThai,StoryID, PageNo, AudioEng,AudioThai,PageType,SceneImage,date,PageNoNext,PageNoAnswer1Extra,PageNoAnswer2Extra) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`;
+            let date = moment(new Date()).format("YYYY-MM-DD hh:mm:ss");
+            conn.query(sql, [StoryDetailEng, StoryDetailThai, StoryID, PageNo, AudioEng, AudioThai, "normal", filename, date,PageNoNext,PageNoAnswer1Extra,PageNoAnswer2Extra], function (err, result) {
+                if (err) throw err;
+                console.log("1 record inserted");
+            });
+            res.send('GTTS output saved successfully.');
+        });
+});
+
 
 // Upload Character
 router.post("/characterform", upload.single("photo"), function (req, res) {
@@ -177,6 +200,22 @@ router.get("/getdata", (req, res) => {
     const query = req.query.q;
     try {
         conn.query(`SELECT * FROM Story WHERE StoryTitleEng LIKE '%${query}'`, (err, result) => {
+            if (err) {
+                console.log("error")
+            } else {
+                console.log("data get")
+                res.status(201).json({ status: 201, data: result })
+            }
+        })
+    } catch (error) {
+        res.status(422).json({ status: 422, error })
+    }
+});
+
+// get last story
+router.get("/getdatalast", (req, res) => {
+    try {
+        conn.query(`SELECT * FROM Story WHERE StoryTitleEng ORDER BY date DESC LIMIT 3 `, (err, result) => {
             if (err) {
                 console.log("error")
             } else {
@@ -368,11 +407,10 @@ router.post("/loginmember/:UserName", (req, res) => {
 });
 
 //Save Drawing
-router.post("/canvas/:UserName/:StoryID/:CharacterID", async (req, res) => {
+router.post("/canvas/:UserName/:StoryID", async (req, res) => {
     const { pngData } = req.body;
     const { StoryID } = req.params;
     const { UserName } = req.params;
-    const { CharacterID } = req.params;
     const fileName = Date.now() + '.png'; // Generate unique file name
     try {
         // Decode base64 PNG data and write to file
@@ -381,7 +419,7 @@ router.post("/canvas/:UserName/:StoryID/:CharacterID", async (req, res) => {
         fs.writeFileSync(filePath, fileData, 'base64');
         // Insert file path into MySQL table
         let date = moment(new Date()).format("YYYY-MM-DD hh:mm:ss");
-        conn.query("INSERT INTO Custom SET ?", { Drawing: filePath, date: date, UserName: UserName, StoryID: StoryID ,CharacterID:CharacterID }, (err, result) => {
+        conn.query("INSERT INTO Custom SET ?", { Drawing: filePath, date: date, UserName: UserName, StoryID: StoryID}, (err, result) => {
             if (err) {
                 res.status(500).send('Error saving post');
             } else {
@@ -395,18 +433,17 @@ router.post("/canvas/:UserName/:StoryID/:CharacterID", async (req, res) => {
 });
 
 //Uploadimg
-router.post("/uploadimage/:UserName/:StoryID/:CharacterID", upload.single("photo"), (req, res) => {
+router.post("/uploadimage/:UserName/:StoryID", upload.single("photo"), (req, res) => {
     const { filename } = req.file;
     const { StoryID } = req.params;
     const { UserName } = req.params;
-    const { CharacterID } = req.params;
 
     if (!filename) {
         res.status(422).json({ status: 422, message: "fill all the details" })
     }
     try {
         let date = moment(new Date()).format("YYYY-MM-DD hh:mm:ss");
-        conn.query("INSERT INTO Custom SET ?", { UploadImg: filename, StoryID: StoryID, UserName: UserName, date: date,CharacterID:CharacterID }, (err, result) => {
+        conn.query("INSERT INTO Custom SET ?", { UploadImg: filename, StoryID: StoryID, UserName: UserName, date: date}, (err, result) => {
             if (err) {
                 console.log("error")
             } else {
@@ -446,7 +483,7 @@ router.get("/poseanimatorT/:StoryID", (req, res) => {
 //StoryDetail PoseAnimator
 router.get("/poseanimatorD/:StoryID", (req, res) => {
     const { StoryID } = req.params;
-    conn.query("SELECT * FROM StoryDetail WHERE PageNo = '1' AND StoryID = ?", StoryID, (err, result) => {
+    conn.query(`SELECT * FROM StoryDetail WHERE PageNo = '1' AND StoryID = '${StoryID}' ORDER BY StoryID DESC LIMIT 1`, (err, result) => {
         if (err) {
             res.status(422).json("error");
         } else {
@@ -482,10 +519,12 @@ router.get("/poseanimatorD/:StoryID/:PageNoAnswer2", (req, res) => {
 });
 
 //StoryDetail PoseAnimatorNormal
-router.get("/poseanimatorD/:StoryID/:PageNoNext", (req, res) => {
+router.get("/poseanimatorD/:StoryID/:PageNoNext/:PageNoAnswer1Extra/:PageNoAnswer2Extra", (req, res) => {
     const { StoryID } = req.params;
     const { PageNoNext } = req.params;
-    conn.query(`SELECT * FROM StoryDetail WHERE PageNo = '${PageNoNext}' AND StoryID = ?`, StoryID, (err, result) => {
+    const { PageNoAnswer1Extra } = req.params;
+    const { PageNoAnswer2Extra } = req.params;  
+    conn.query(`SELECT * FROM StoryDetail WHERE StoryID = '${StoryID}' AND PageNo = '${PageNoNext}' OR PageNo ='${PageNoAnswer1Extra}' OR PageNo ='${PageNoAnswer2Extra}' `, (err, result) => {
         if (err) {
             res.status(422).json("error");
         } else {
@@ -497,7 +536,7 @@ router.get("/poseanimatorD/:StoryID/:PageNoNext", (req, res) => {
 // Audio Story Detail PoseAnimator
 router.get('/audioeng/:StoryID', (req, res) => {
     const { StoryID } = req.params;
-    conn.query(`SELECT AudioEng FROM StoryDetail WHERE PageNo = '1' AND StoryID = ?`, StoryID, (err, result) => {
+    conn.query(`SELECT AudioEng FROM StoryDetail WHERE StoryID = '${StoryID}' AND PageNo = '1' `,(err, result) => {
         if (err) throw err;
         const filePath = result[0].AudioEng;
         const fileStream = fs.createReadStream(filePath);
@@ -506,7 +545,29 @@ router.get('/audioeng/:StoryID', (req, res) => {
 });
 router.get('/audiothai/:StoryID', (req, res) => {
     const { StoryID } = req.params;
-    conn.query(`SELECT AudioThai FROM StoryDetail WHERE PageNo = '1' AND StoryID = ?`, StoryID, (err, result) => {
+    conn.query(`SELECT AudioThai FROM StoryDetail WHERE StoryID = '${StoryID}' AND PageNo = '1'`,(err, result) => {
+        if (err) throw err;
+        const filePath = result[0].AudioThai;
+        const fileStream = fs.createReadStream(filePath);
+        fileStream.pipe(res);
+    });
+});
+
+// Audio Story Detail PoseAnimatorNormal
+router.get('/audioeng/:StoryID/:PageNoNext', (req, res) => {
+    const { StoryID } = req.params;
+    const { PageNoNext } = req.params;
+    conn.query(`SELECT AudioEng FROM StoryDetail WHERE StoryID = '${StoryID}' AND PageNo = '${PageNoNext}' `, (err, result) => {
+        if (err) throw err;
+        const filePath = result[0].AudioEng;
+        const fileStream = fs.createReadStream(filePath);
+        fileStream.pipe(res);
+    });
+});
+router.get('/audiothai/:StoryID/:PageNoNext', (req, res) => {
+    const { StoryID } = req.params;
+    const { PageNoNext } = req.params;
+    conn.query(`SELECT AudioThai FROM StoryDetail WHERE StoryID = '${StoryID}' AND PageNo = '${PageNoNext}'`,(err, result) => {
         if (err) throw err;
         const filePath = result[0].AudioThai;
         const fileStream = fs.createReadStream(filePath);
@@ -518,7 +579,7 @@ router.get('/audiothai/:StoryID', (req, res) => {
 router.get('/audioeng/:StoryID/:PageNoAnswer1', (req, res) => {
     const { StoryID } = req.params;
     const { PageNoAnswer1 } = req.params;
-    conn.query(`SELECT AudioEng FROM StoryDetail WHERE PageNo = '${PageNoAnswer1}' AND StoryID = ?`, StoryID, (err, result) => {
+    conn.query(`SELECT AudioEng FROM StoryDetail WHERE StoryID = '${StoryID}' AND PageNo = '${PageNoAnswer1}'`,(err, result) => {
         if (err) throw err;
         const filePath = result[0].AudioEng;
         const fileStream = fs.createReadStream(filePath);
@@ -528,7 +589,7 @@ router.get('/audioeng/:StoryID/:PageNoAnswer1', (req, res) => {
 router.get('/audiothai/:StoryID/:PageNoAnswer1', (req, res) => {
     const { StoryID } = req.params;
     const { PageNoAnswer1 } = req.params;
-    conn.query(`SELECT AudioThai FROM StoryDetail WHERE PageNo = '${PageNoAnswer1}' AND StoryID = ?`, StoryID, (err, result) => {
+    conn.query(`SELECT AudioThai FROM StoryDetail WHERE StoryID = '${StoryID}' AND PageNo = '${PageNoAnswer1}'`, (err, result) => {
         if (err) throw err;
         const filePath = result[0].AudioThai;
         const fileStream = fs.createReadStream(filePath);
@@ -540,7 +601,7 @@ router.get('/audiothai/:StoryID/:PageNoAnswer1', (req, res) => {
 router.get('/audioeng/:StoryID/:PageNoAnswer2', (req, res) => {
     const { StoryID } = req.params;
     const { PageNoAnswer2 } = req.params;
-    conn.query(`SELECT AudioEng FROM StoryDetail WHERE PageNo = '${PageNoAnswer2}' AND StoryID = ?`, StoryID, (err, result) => {
+    conn.query(`SELECT AudioEng FROM StoryDetail WHERE StoryID = '${StoryID}' AND PageNo = '${PageNoAnswer2}'`, (err, result) => {
         if (err) throw err;
         const filePath = result[0].AudioEng;
         const fileStream = fs.createReadStream(filePath);
@@ -550,7 +611,7 @@ router.get('/audioeng/:StoryID/:PageNoAnswer2', (req, res) => {
 router.get('/audiothai/:StoryID/:PageNoAnswer2', (req, res) => {
     const { StoryID } = req.params;
     const { PageNoAnswer2 } = req.params;
-    conn.query(`SELECT AudioThai FROM StoryDetail WHERE PageNo = '${PageNoAnswer2}' AND StoryID = ?`, StoryID, (err, result) => {
+    conn.query(`SELECT AudioThai FROM StoryDetail WHERE StoryID = '${StoryID}' AND PageNo = '${PageNoAnswer2}'`, (err, result) => {
         if (err) throw err;
         const filePath = result[0].AudioThai;
         const fileStream = fs.createReadStream(filePath);
@@ -559,18 +620,20 @@ router.get('/audiothai/:StoryID/:PageNoAnswer2', (req, res) => {
 });
 
 //Audio Answer Pose Animator
-router.get('/audioanswereng1/:StoryID', (req, res) => {
+router.get('/audioanswereng1/:StoryID/:PageNoNext', (req, res) => {
     const { StoryID } = req.params;
-    conn.query(`SELECT AudioAnswerEng1 FROM StoryDetail WHERE PageNo = '1' AND StoryID = ?`, StoryID, (err, result) => {
+    const { PageNoNext } = req.params;
+    conn.query(`SELECT AudioAnswerEng1 FROM StoryDetail WHERE StoryID = '${StoryID}' AND PageNo = '${PageNoNext}'`, (err, result) => {
         if (err) throw err;
         const filePath = result[0].AudioAnswerEng1;
         const fileStream = fs.createReadStream(filePath);
         fileStream.pipe(res);
     });
 });
-router.get('/audioanswereng2/:StoryID', (req, res) => {
+router.get('/audioanswereng2/:StoryID/:PageNoNext', (req, res) => {
     const { StoryID } = req.params;
-    conn.query(`SELECT AudioAnswerEng2 FROM StoryDetail WHERE PageNo = '1' AND StoryID = ?`, StoryID, (err, result) => {
+    const { PageNoNext } = req.params;
+    conn.query(`SELECT AudioAnswerEng2 FROM StoryDetail WHERE StoryID = '${StoryID}' AND PageNo = '${PageNoNext}' `, (err, result) => {
         if (err) throw err;
         const filePath = result[0].AudioAnswerEng2;
         const fileStream = fs.createReadStream(filePath);
@@ -582,7 +645,7 @@ router.get('/audioanswereng2/:StoryID', (req, res) => {
 router.get('/audioanswereng1/:StoryID/:PageNoAnswer1', (req, res) => {
     const { StoryID } = req.params;
     const { PageNoAnswer1 } = req.params;
-    conn.query(`SELECT AudioAnswerEng1 FROM StoryDetail WHERE PageNo = '${PageNoAnswer1}' AND StoryID = ?`, StoryID, (err, result) => {
+    conn.query(`SELECT AudioAnswerEng1 FROM StoryDetail WHERE StoryID = '${StoryID}' AND PageNo = '${PageNoAnswer1}'`,(err, result) => {
         if (err) throw err;
         const filePath = result[0].AudioAnswerEng1;
         const fileStream = fs.createReadStream(filePath);
@@ -592,7 +655,7 @@ router.get('/audioanswereng1/:StoryID/:PageNoAnswer1', (req, res) => {
 router.get('/audioanswereng2/:StoryID/:PageNoAnswer1', (req, res) => {
     const { StoryID } = req.params;
     const { PageNoAnswer1 } = req.params;
-    conn.query(`SELECT AudioAnswerEng2 FROM StoryDetail WHERE PageNo = '${PageNoAnswer1}' AND StoryID = ?`, StoryID, (err, result) => {
+    conn.query(`SELECT AudioAnswerEng2 FROM StoryDetail WHERE StoryID = '${StoryID}' AND PageNo = '${PageNoAnswer1}' `,(err, result) => {
         if (err) throw err;
         const filePath = result[0].AudioAnswerEng2;
         const fileStream = fs.createReadStream(filePath);
@@ -600,11 +663,11 @@ router.get('/audioanswereng2/:StoryID/:PageNoAnswer1', (req, res) => {
     });
 });
 
-//Audio Answer Pose Animator Next
+//Audio Answer2 Pose Animator Next
 router.get('/audioanswereng1/:StoryID/:PageNoAnswer2', (req, res) => {
     const { StoryID } = req.params;
     const { PageNoAnswer2 } = req.params;
-    conn.query(`SELECT AudioAnswerEng1 FROM StoryDetail WHERE PageNo = '${PageNoAnswer2}' AND StoryID = ?`, StoryID, (err, result) => {
+    conn.query(`SELECT AudioAnswerEng1 FROM StoryDetail WHERE StoryID = '${StoryID}' AND PageNo = '${PageNoAnswer2}'`,(err, result) => {
         if (err) throw err;
         const filePath = result[0].AudioAnswerEng1;
         const fileStream = fs.createReadStream(filePath);
@@ -614,7 +677,7 @@ router.get('/audioanswereng1/:StoryID/:PageNoAnswer2', (req, res) => {
 router.get('/audioanswereng2/:StoryID/:PageNoAnswer2', (req, res) => {
     const { StoryID } = req.params;
     const { PageNoAnswer2 } = req.params;
-    conn.query(`SELECT AudioAnswerEng2 FROM StoryDetail WHERE PageNo = '${PageNoAnswer2}' AND StoryID = ?`, StoryID, (err, result) => {
+    conn.query(`SELECT AudioAnswerEng2 FROM StoryDetail WHERE StoryID = '${StoryID}' AND PageNo = '${PageNoAnswer2}'`,(err, result) => {
         if (err) throw err;
         const filePath = result[0].AudioAnswerEng2;
         const fileStream = fs.createReadStream(filePath);
@@ -649,15 +712,14 @@ router.get('/GetDressingBody', (req, res) => {
 });
 
 // Save Dressing
-router.post('/SaveDressing/:UserName/:StoryID/:CharacterID', (req, res) => {
+router.post('/SaveDressing/:UserName/:StoryID', (req, res) => {
     const { HeadImg } = req.body[0];
     const { BodyImg } = req.body[1];
-    const {CharacterID} = req.params;
     const {UserName}=req.params;
     const {StoryID}=req.params;
     let date = moment(new Date()).format("YYYY-MM-DD hh:mm:ss");
-    const query = `INSERT INTO Custom (DressingHead,DressingBody,date,CharacterID,UserName,StoryID) VALUES (?,?,?,?,?,?)`;
-    conn.query(query, [HeadImg, BodyImg, date,CharacterID,UserName,StoryID], (err, results) => {
+    const query = `INSERT INTO Custom (DressingHead,DressingBody,date,UserName,StoryID) VALUES (?,?,?,?,?)`;
+    conn.query(query, [HeadImg, BodyImg, date,UserName,StoryID], (err, results) => {
         if (err) {
             console.error(err);
             res.sendStatus(500);
