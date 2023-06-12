@@ -1,0 +1,109 @@
+.main-section2 {
+    width: 100%;
+    margin: 0 auto;
+    padding: 4.5rem 0;
+    margin-top: -40px;
+    position: relative;
+
+    height: 800px;
+}
+
+.main-section2.topPage {
+    background-color: #100616;
+    -webkit-mask-image: url(../Home_components/Home_assets/mask_2.svg);
+    mask-image: url(../Home_components/Home_assets/mask_2.svg);
+    background-image: url(../Home_components/Home_assets/section_texture_bg.png);
+}
+
+.TitleLabel {
+    font-size: 2.5rem;
+    line-height: 2.5rem;
+    text-align: center;
+    margin-bottom: 1.25rem;
+    margin-top: 6rem;
+}
+
+.Eng_txt , .Th_txt {
+    margin: 20px 40px 20px 40px;
+}
+
+.storySection {
+    margin-top: -28rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    display: grid;
+    place-items: center;  
+    margin-bottom: 50rem; 
+}
+
+.BookSection {
+    padding: 50px;
+    width: 800px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-decoration: none;
+
+    margin-bottom: 20px ;
+    margin-top: 100px;
+    border-radius: 20px;
+}
+
+.BookPaper {
+    position: absolute;
+    left: 50%;
+    top: -140px;
+    transform: translateX(-50%);
+    z-index: 6;
+    background-image: url(./papertxture.png);
+    background-color: #E5DCD5;
+    background-size: cover;
+    
+    width: 918px;
+    height: 890px;
+    max-width: 100%;
+    -webkit-mask-image: url(mask_block2.svg);
+    mask-image: url(mask_block2.svg);
+    -webkit-mask-size: cover;
+    mask-size: cover;
+}
+
+.PicStory {
+    margin-top: 3rem;
+}
+
+.Storytxt {
+    margin-top: 2rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    color: #452F1C;
+    letter-spacing: 0.05rem;
+    font-size: 18px;
+    font-weight: 200 !important;
+}
+
+.StoryAudio {
+    padding-top: 10px;
+    position: relative;
+    right: -17rem;
+}
+
+.EngAudio , .ThAudio {
+    margin-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    
+    color: #fff;
+    background-color: #514a92;
+    border-radius: 25px;
+    border: none;
+}
+
+.EngAudio:hover , .ThAudio:hover {
+    opacity: 80%;
+  }

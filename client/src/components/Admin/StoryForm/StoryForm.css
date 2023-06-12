@@ -1,0 +1,30 @@
+.Form {
+    margin-top: 1rem;
+    place-items: center;
+    display: grid;
+}
+
+.story-form {
+    /* background-color: antiquewhite; */
+}
+
+.formbox {
+    width: 600px;
+    height: 40px;
+    border-radius: 10px;
+    color: #514a92;
+}
+
+.formbox::placeholder {
+    font-family: "Kanit";
+    letter-spacing: 0.1rem;
+    opacity: 50%;
+    color: #2b2b2b;
+    padding-left: 5px;
+}
+ 
+.story-form {
+    place-items: center;
+    display: grid;
+    padding: 0px 50px 50px 50px;
+}
